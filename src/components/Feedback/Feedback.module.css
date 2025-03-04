@@ -1,0 +1,11 @@
+.feedback {
+  margin-top: 15px;
+}
+
+.feedback div {
+  margin-top: 4px;
+}
+
+.positivePercentage {
+  color: hsl(calc(var(--percentage) * 1.2), 100%, 50%);
+}

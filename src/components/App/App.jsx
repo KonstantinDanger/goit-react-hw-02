@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+
+import Description from "../Description/Description.jsx";
+import Options from "../Options/Options.jsx";
+import Feedback from "../Feedback/Feedback.jsx";
+import Notification from "../Notification/Notification.jsx";
+
+import { initialRatings, storageKey } from "../../constants.jsx";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [ratings, setRatings] = useState(() => {
+    const dataStr = localStorage.getItem(storageKey);
+
+    if (dataStr) return JSON.parse(dataStr);
+
+    return initialRatings;
+  });
+
+  useEffect(() => {
+    const dataStr = JSON.stringify(ratings);
+    localStorage.setItem(storageKey, dataStr);
+  }, [ratings]);
+
+  const totalFeedback = () => {
+    let feedback = 0;
+    Object.keys(ratings).forEach((rating) => (feedback += ratings[rating]));
+    return feedback;
+  };
+
+  const handleResetClick = () => {
+    setRatings(initialRatings);
+  };
+
+  const updateFeedback = (feedbackType) => {
+    setRatings({
+      ...ratings,
+      [feedbackType]: ratings[feedbackType] + 1,
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Description
+        name={"Sip Happens Café"}
+        descText={
+          "Please leave your feedback about our service by selecting one of the options below."
+        }
+      ></Description>
+      <Options
+        ratingKeys={Object.keys(ratings)}
+        onOptionClick={updateFeedback}
+        onReset={handleResetClick}
+        totalFeedback={totalFeedback()}
+      ></Options>
+      {totalFeedback() !== 0 ? (
+        <Feedback ratings={ratings} totalFeedback={totalFeedback()}></Feedback>
+      ) : (
+        <Notification />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
