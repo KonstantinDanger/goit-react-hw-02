@@ -39,6 +39,10 @@ function App() {
     });
   };
 
+  const positivePercentage = Math.round(
+    (ratings["good"] / totalFeedback()) * 100
+  );
+
   return (
     <div>
       <Description
@@ -54,7 +58,11 @@ function App() {
         totalFeedback={totalFeedback()}
       ></Options>
       {totalFeedback() !== 0 ? (
-        <Feedback ratings={ratings} totalFeedback={totalFeedback()}></Feedback>
+        <Feedback
+          ratings={ratings}
+          totalFeedback={totalFeedback()}
+          positivePercentage={positivePercentage}
+        ></Feedback>
       ) : (
         <Notification />
       )}

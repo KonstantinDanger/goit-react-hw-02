@@ -1,10 +1,11 @@
 import capitalize from "capitalize";
 import css from "./Feedback.module.css";
 
-export default function Feedback({ ratings, totalFeedback }) {
-  const positivePercentage = Math.round(
-    (ratings["good"] / totalFeedback) * 100
-  );
+export default function Feedback({
+  ratings,
+  totalFeedback,
+  positivePercentage,
+}) {
   return (
     <div className={css.feedback}>
       {Object.keys(ratings).map((rating, idx) => {
